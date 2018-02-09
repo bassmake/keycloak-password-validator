@@ -1,0 +1,37 @@
+group 'sk.bsmk'
+version '0.1-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+}
+
+ext {
+  keycloakVersion = '3.4.3.Final'
+  resteasyVersion = '3.1.4.Final'
+}
+
+dependencies {
+  compileOnly "org.keycloak:keycloak-server-spi-private:$keycloakVersion"
+  compileOnly "org.keycloak:keycloak-server-spi:$keycloakVersion"
+  compileOnly "org.keycloak:keycloak-services:$keycloakVersion"
+  compileOnly "org.keycloak:keycloak-core:$keycloakVersion"
+  compileOnly "org.jboss.resteasy:resteasy-client:$resteasyVersion"
+
+  testCompile "junit:junit:4.12"
+}
+
+task copyJar(type: Copy) {
+  from jar
+  into "${System.getenv('KEYCLOAK_HOME')}/standalone/deployments"
+}
+
+copyJar.dependsOn compileJava
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '4.5.1'
+  distributionType = 'all'
+}
