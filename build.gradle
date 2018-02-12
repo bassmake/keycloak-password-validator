@@ -1,3 +1,7 @@
+plugins {
+  id 'nebula.provided-base' version '3.0.3'
+}
+
 group 'sk.bsmk'
 version '0.1-SNAPSHOT'
 
@@ -15,13 +19,16 @@ ext {
 }
 
 dependencies {
-  compileOnly "org.keycloak:keycloak-server-spi-private:$keycloakVersion"
-  compileOnly "org.keycloak:keycloak-server-spi:$keycloakVersion"
-  compileOnly "org.keycloak:keycloak-services:$keycloakVersion"
-  compileOnly "org.keycloak:keycloak-core:$keycloakVersion"
-  compileOnly "org.jboss.resteasy:resteasy-client:$resteasyVersion"
+  provided "org.keycloak:keycloak-server-spi-private:$keycloakVersion"
+  provided "org.keycloak:keycloak-server-spi:$keycloakVersion"
+  provided "org.keycloak:keycloak-services:$keycloakVersion"
+  provided "org.keycloak:keycloak-core:$keycloakVersion"
+  provided "org.jboss.resteasy:resteasy-client:$resteasyVersion"
 
   testCompile "junit:junit:4.12"
+  testCompile "org.assertj:assertj-core:3.9.0"
+  testCompile "org.keycloak:keycloak-admin-client:$keycloakVersion"
+  testCompile "org.jboss.resteasy:resteasy-jackson2-provider:$resteasyVersion"
 }
 
 task copyJar(type: Copy) {
