@@ -11,7 +11,6 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
 import org.keycloak.services.resource.RealmResourceProvider;
-import org.keycloak.services.validation.Validation;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -38,13 +37,13 @@ public class PasswordValidatorProvider implements RealmResourceProvider {
     return this;
   }
 
-  @Path("/{userId}/password-validation")
+  @Path("{userId}/password-validation")
   @PUT
   @NoCache
   @Consumes(MediaType.APPLICATION_JSON)
   public Response validatePassword(@PathParam("userId") String userId, CredentialRepresentation pass) {
 
-    log.infof("Validating password for user: %s", pass);
+    log.infof("validating password for user: %s", pass);
 
     final RealmModel realm = session.getContext().getRealm();
     final UserModel user = session.users().getUserById(userId, realm);
@@ -57,8 +56,8 @@ public class PasswordValidatorProvider implements RealmResourceProvider {
       log.info("no password provided");
       throw new BadRequestException("No password provided");
     }
-    log.infof("Password value: %s", pass.getValue());
-    if (Validation.isBlank(pass.getValue())) {
+    log.infof("password value: %s", pass.getValue());
+    if (isBlank(pass.getValue())) {
       log.info("empty password provided");
       throw new BadRequestException("Empty password not allowed");
     }
@@ -70,10 +69,16 @@ public class PasswordValidatorProvider implements RealmResourceProvider {
       log.info("password not provided");
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
+    log.infof("password is ok");
     return Response.ok().build();
   }
 
   @Override
   public void close() {
   }
+
+  private static boolean isBlank(String s) {
+    return s == null || s.trim().length() == 0;
+  }
+
 }

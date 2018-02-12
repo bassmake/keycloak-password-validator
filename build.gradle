@@ -31,12 +31,26 @@ dependencies {
   testCompile "org.jboss.resteasy:resteasy-jackson2-provider:$resteasyVersion"
 }
 
-task copyJar(type: Copy) {
-  from jar
-  into "${System.getenv('KEYCLOAK_HOME')}/standalone/deployments"
+jar {
+  archiveName = "${project.name}.$extension"
 }
 
-copyJar.dependsOn compileJava
+//task copyJar(type: Copy) {
+//  from jar
+//  into "${System.getenv('KEYCLOAK_HOME')}/standalone/deployments"
+//}
+
+task addModule(type: Exec) {
+  workingDir './bin'
+  commandLine './add-module.sh'
+}
+
+task reamoveAndAddModule(type: Exec) {
+  workingDir './bin'
+  commandLine './remove-and-add-module.sh'
+}
+
+addModule.dependsOn jar
 
 task wrapper(type: Wrapper) {
   gradleVersion = '4.5.1'

@@ -22,7 +22,7 @@ public class PasswordValidatorProviderFactory implements RealmResourceProviderFa
   @Override
   public Map<String, String> getOperationalInfo() {
     final Map<String, String> info = new LinkedHashMap<>();
-    info.put("version", "0.3");
+    info.put("version", "0.4");
     return info;
   }
 

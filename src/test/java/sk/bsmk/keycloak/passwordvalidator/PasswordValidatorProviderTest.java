@@ -9,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PasswordValidatorProviderTest {
 
-  private static final String USERNAME = "someone";
   private static final String PASSWORD = "valid-password";
 
   private static String userId;
@@ -32,12 +31,12 @@ public class PasswordValidatorProviderTest {
 
   @Test
   public void thatValidPasswordReturnsOk() {
-    assertThat(service.isPasswordValid(USERNAME, PASSWORD)).isTrue();
+    assertThat(service.isPasswordValid(userId, PASSWORD)).isTrue();
   }
 
   @Test
   public void thatInvalidPasswordReturnsBadRequest() {
-    assertThat(service.isPasswordValid(USERNAME, PASSWORD + "abc")).isTrue();
+    assertThat(service.isPasswordValid(userId, PASSWORD + "abc")).isFalse();
   }
 
   @Test
@@ -47,7 +46,7 @@ public class PasswordValidatorProviderTest {
 
   @Test
   public void thatEmptyPasswordReturnsBadRequest() {
-    service.isPasswordValid(USERNAME, "");
+    service.isPasswordValid(userId, "");
   }
 
 }
