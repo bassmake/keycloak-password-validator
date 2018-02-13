@@ -64,7 +64,7 @@ public class KeycloakService {
     assertThat(response.getStatus()).isEqualTo(HttpStatus.SC_NO_CONTENT);
   }
 
-  public boolean isPasswordValid(String userId, String password) {
+  public int validatePassword(String userId, String password) {
 
     final CredentialRepresentation credentials = new CredentialRepresentation();
     credentials.setType(CredentialRepresentation.PASSWORD);
@@ -72,12 +72,13 @@ public class KeycloakService {
 
     final PasswordValidatorClient validatorClient = resteasyClient.target(KEYCLOAK_URL).proxy(PasswordValidatorClient.class);
     final String authorization = "Bearer " + keycloak.tokenManager().getAccessToken().getToken();
-    final Response response = validatorClient.validatePasswordUnauthorized(REALM, userId, credentials);
 
-    return response.getStatus() == HttpStatus.SC_OK;
+    final Response response = validatorClient.validatePassword(authorization, REALM, userId, credentials);
+
+    return response.getStatus();
   }
 
-  public boolean isPasswordValidUnauthorized(String userId, String password) {
+  public int validatePasswordUnauthorized(String userId, String password) {
 
     final CredentialRepresentation credentials = new CredentialRepresentation();
     credentials.setType(CredentialRepresentation.PASSWORD);
@@ -86,7 +87,7 @@ public class KeycloakService {
     final PasswordValidatorClient validatorClient = resteasyClient.target(KEYCLOAK_URL).proxy(PasswordValidatorClient.class);
     final Response response = validatorClient.validatePasswordUnauthorized(REALM, userId, credentials);
 
-    return response.getStatus() == HttpStatus.SC_OK;
+    return response.getStatus();
   }
 
   public static String extractCreatedId(Response response) {

@@ -1,5 +1,6 @@
 package sk.bsmk.keycloak.passwordvalidator;
 
+import org.apache.http.HttpStatus;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,27 +27,27 @@ public class PasswordValidatorProviderTest {
 
   @Test
   public void thatRequestWithoutTokenReturnsUnauthorized() {
-
+    assertThat(service.validatePasswordUnauthorized(userId, PASSWORD)).isEqualTo(HttpStatus.SC_UNAUTHORIZED);
   }
 
   @Test
   public void thatValidPasswordReturnsOk() {
-    assertThat(service.isPasswordValid(userId, PASSWORD)).isTrue();
+    assertThat(service.validatePassword(userId, PASSWORD)).isEqualTo(HttpStatus.SC_OK);
   }
 
   @Test
   public void thatInvalidPasswordReturnsBadRequest() {
-    assertThat(service.isPasswordValid(userId, PASSWORD + "abc")).isFalse();
+    assertThat(service.validatePassword(userId, "in" + PASSWORD)).isEqualTo(HttpStatus.SC_BAD_REQUEST);
   }
 
   @Test
-  public void thatNonExistingUserReturnsBadRequest() {
-    service.isPasswordValid("someone-else", "abc");
+  public void thatNonExistingUserReturnsNotFound() {
+    assertThat(service.validatePassword("someone-else", "abc")).isEqualTo(HttpStatus.SC_NOT_FOUND);
   }
 
   @Test
   public void thatEmptyPasswordReturnsBadRequest() {
-    service.isPasswordValid(userId, "");
+    assertThat(service.validatePassword(userId, "")).isEqualTo(HttpStatus.SC_BAD_REQUEST);
   }
 
 }

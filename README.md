@@ -7,6 +7,7 @@ Before using on production, change logging, as now it logs password.
 
 - download and extract keycloak (current version is `3.4.3.Final`)
 - set admin username as `admin` and password as `pass` - these values are used by tests
+- for `admin-cli` client go to Scope tab and enable full scope
 - set `KEYCLOAK_HOME` property
 - run `./gradlew clean addModule`, this will add module to keycloak
 - add `<provider>module:sk.bsmk.keycloak-password-validator</provider>` to <providers> in standalone.xml

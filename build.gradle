@@ -45,12 +45,13 @@ task addModule(type: Exec) {
   commandLine './add-module.sh'
 }
 
-task reamoveAndAddModule(type: Exec) {
+task removeAndAddModule(type: Exec) {
   workingDir './bin'
   commandLine './remove-and-add-module.sh'
 }
 
 addModule.dependsOn jar
+removeAndAddModule.dependsOn jar
 
 task wrapper(type: Wrapper) {
   gradleVersion = '4.5.1'
