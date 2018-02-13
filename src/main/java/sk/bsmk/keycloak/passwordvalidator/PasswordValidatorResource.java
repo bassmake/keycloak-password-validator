@@ -5,8 +5,7 @@ import org.jboss.resteasy.annotations.cache.NoCache;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
-import org.keycloak.policy.PasswordPolicyManagerProvider;
-import org.keycloak.policy.PolicyError;
+import org.keycloak.models.credential.PasswordUserCredentialModel;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
@@ -44,7 +43,7 @@ public class PasswordValidatorResource {
 
     checkRealmAdmin();
 
-    log.infof("validating password for user: %s", pass);
+    log.infof("validating password for user: %s", userId);
 
     final RealmModel realm = getRealm();
     final UserModel user = session.users().getUserById(userId, realm);
@@ -64,14 +63,12 @@ public class PasswordValidatorResource {
     }
 
     // validate password
-    final PasswordPolicyManagerProvider policyManager = session.getProvider(PasswordPolicyManagerProvider.class);
-    final PolicyError policyError = policyManager.validate(realm, user, pass.getValue());
-    if (null != policyError) {
-      log.info("bad password provided");
-      throw new BadRequestException("Password does not match");
+    if (isValid(realm, user, pass.getValue())) {
+      log.info("password is ok");
+      return Response.ok().build();
     }
-    log.info("password is ok");
-    return Response.ok().build();
+    log.info("bad password provided");
+    throw new BadRequestException("Password does not match");
   }
 
   private RealmModel getRealm() {
@@ -79,7 +76,7 @@ public class PasswordValidatorResource {
   }
 
   private void checkRealmAdmin() {
-    log.infof("Checking realm", auth);
+    log.infof("Checking realm admin", auth);
     if (auth == null) {
       log.info("auth is null");
       throw new NotAuthorizedException("Bearer");
@@ -94,6 +91,14 @@ public class PasswordValidatorResource {
 
   private static boolean isBlank(String s) {
     return s == null || s.trim().length() == 0;
+  }
+
+  private boolean isValid(RealmModel realm, UserModel user, String password) {
+    log.info("Validating password");
+
+    final PasswordUserCredentialModel credentialInput = PasswordUserCredentialModel.password(password);
+    return session.userCredentialManager().isValid(realm, user, credentialInput);
+
   }
 
 }
