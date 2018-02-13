@@ -1,6 +1,6 @@
 # Password validator provider for keycloak
 
-Heavily inspired by https://github.com/keycloak/keycloak/pull/4229.
+Provider that add new endpoint to keycloak that checks if password is correct.
 Before using on production, change logging, as now it logs password.
 
 ## Building

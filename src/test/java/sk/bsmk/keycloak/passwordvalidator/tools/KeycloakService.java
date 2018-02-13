@@ -85,7 +85,7 @@ public class KeycloakService {
     credentials.setValue(password);
 
     final PasswordValidatorClient validatorClient = resteasyClient.target(KEYCLOAK_URL).proxy(PasswordValidatorClient.class);
-    final Response response = validatorClient.validatePasswordUnauthorized(REALM, userId, credentials);
+    final Response response = validatorClient.validatePasswordUnauthenticated(REALM, userId, credentials);
 
     return response.getStatus();
   }

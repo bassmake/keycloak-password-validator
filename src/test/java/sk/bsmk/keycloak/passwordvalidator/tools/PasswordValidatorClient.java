@@ -32,7 +32,7 @@ public interface PasswordValidatorClient {
   @PUT
   @NoCache
   @Consumes(MediaType.APPLICATION_JSON)
-  Response validatePasswordUnauthorized(
+  Response validatePasswordUnauthenticated(
     @PathParam("realm") String realm,
     @PathParam("userId") String userId,
     CredentialRepresentation pass
