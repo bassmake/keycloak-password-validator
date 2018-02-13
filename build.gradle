@@ -23,7 +23,6 @@ dependencies {
   provided "org.keycloak:keycloak-server-spi:$keycloakVersion"
   provided "org.keycloak:keycloak-services:$keycloakVersion"
   provided "org.keycloak:keycloak-core:$keycloakVersion"
-  provided "org.jboss.resteasy:resteasy-client:$resteasyVersion"
 
   testCompile "junit:junit:4.12"
   testCompile "org.assertj:assertj-core:3.9.0"
